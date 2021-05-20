@@ -111,43 +111,34 @@ while (true) {
 */
 
 //------------------------------------start
-  struct timeval start_time;
+struct timeval start_time;
   gettimeofday(&start_time, NULL);
 
-  int sub_array_size = array_size / threads_num;
-  int sizeforthread= threads_num<=array_size ? (array_size/threads_num) : 1;
-  printf(" Size of one sub array = %d \n ",sizeforthread);
-
-  pthread_t threads[threads_num];
-
+  int segment = array_size / threads_num;
   struct SumArgs args[threads_num];
+  for (int i = 0; i < threads_num; i++) {
+      args[i].begin = i * segment;
+      args[i].end = (i == threads_num) ? array_size : (i + 1) * segment;
+      args[i].array = array;
+  }
+
   for (uint32_t i = 0; i < threads_num; i++) {
-      args[i].begin = i * sizeforthread;
-      if (i!=(threads_num-1))
-      {
-          args[i].end = args[i].begin + sizeforthread;          
-      }
-      else{
-          args[i].end = array_size;
-      }
-      args[i].array=array;
-      if (pthread_create(&threads[i], NULL, ThreadSum, (void *)&args[i])) {
+    if (pthread_create(&threads[i], NULL, ThreadSum, (void *)&args)) {
       printf("Error: pthread_create failed!\n");
       return 1;
-      }
+    }
   }
 
   int total_sum = 0;
   for (uint32_t i = 0; i < threads_num; i++) {
     int sum = 0;
     pthread_join(threads[i], (void **)&sum);
-    printf(" Thread sum = %d \n ",sum);
     total_sum += sum;
-    printf(" Current total = %d \n ",total_sum);
-  } 
+  }
 
   struct timeval finish_time;
   gettimeofday(&finish_time, NULL);
+
   double elapsed_time = (finish_time.tv_sec - start_time.tv_sec) * 1000.0;
   elapsed_time += (finish_time.tv_usec - start_time.tv_usec) / 1000.0;
 

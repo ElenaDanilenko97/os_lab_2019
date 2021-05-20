@@ -17,6 +17,30 @@ struct Server {
   int port;
 };
 
+//--------------------------------------
+struct ServersSegment
+{
+    struct sockaddr_in server;
+    uint64_t begin;
+    uint64_t end;
+    uint64_t mod;
+};
+
+bool ConvertStringToUI64(const char* str, uint64_t* val) {
+    char* end = NULL;
+    unsigned long long i = strtoull(str, &end, 10);
+    if (errno == ERANGE) {
+        fprintf(stderr, "Out of uint64_t range: %s\n", str);
+        return false;
+    }
+
+    if (errno != 0)
+        return false;
+
+    *val = i;
+    return true;
+}
+//---------------------------------------
 uint64_t MultModulo(uint64_t a, uint64_t b, uint64_t mod) {
   uint64_t result = 0;
   a = a % mod;
