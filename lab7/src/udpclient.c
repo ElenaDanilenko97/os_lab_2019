@@ -18,9 +18,8 @@
 #define SLEN sizeof(struct sockaddr_in)
 
 int main(int argc, char **argv) {
-
-//-------------------------------start
-char ip_address[255];
+  //-------------start
+  char ip_address[255];
   int buff_size = -1;
   int server_port = -1;
   
@@ -81,23 +80,17 @@ char ip_address[255];
             argv[0]);
     return 1;
   }
-
-//-------------------------------end    
+//--------------------------end
   int sockfd, n;
   char sendline[buff_size], recvline[buff_size + 1];
   struct sockaddr_in servaddr;
   struct sockaddr_in cliaddr;
 
-  if (argc != 2) {
-    printf("usage: client <IPaddress of server>\n");
-    exit(1);
-  }
-
   memset(&servaddr, 0, sizeof(servaddr));
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(server_port);
 
-  if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) < 0) {
+  if (inet_pton(AF_INET, ip_address, &servaddr.sin_addr) < 0) {//ip address
     perror("inet_pton problem");
     exit(1);
   }
@@ -109,6 +102,8 @@ char ip_address[255];
   write(1, "Enter string\n", 13);
 
   while ((n = read(0, sendline, buff_size)) > 0) {
+
+
     if (sendto(sockfd, sendline, n, 0, (SADDR *)&servaddr, SLEN) == -1) {
       perror("sendto problem");
       exit(1);

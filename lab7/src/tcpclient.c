@@ -9,13 +9,14 @@
 
 #include <stdbool.h>
 #include <getopt.h>
+
 //#define BUFSIZE 100
 #define SADDR struct sockaddr
 #define SIZE sizeof(struct sockaddr_in)
 
 int main(int argc, char *argv[]) {
-//------------------start
-char ip_address[255];
+  //------------------start
+  char ip_address[255];
   int buff_size = -1;
   int server_port = -1;
   
@@ -76,8 +77,7 @@ char ip_address[255];
             argv[0]);
     return 1;
   }
-
-//-------------------end
+//-------------end
   int fd;
   int nread;
   char buf[buff_size];
@@ -95,12 +95,12 @@ char ip_address[255];
   memset(&servaddr, 0, SIZE);
   servaddr.sin_family = AF_INET;
 
-  if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
+  if (inet_pton(AF_INET, ip_address, &servaddr.sin_addr) <= 0) { //ip address
     perror("bad address");
     exit(1);
   }
 
-  servaddr.sin_port = htons(atoi(argv[2]));
+  servaddr.sin_port = htons(server_port);//port
 
   if (connect(fd, (SADDR *)&servaddr, SIZE) < 0) {
     perror("connect");
@@ -109,6 +109,12 @@ char ip_address[255];
 
   write(1, "Input message to send\n", 22);
   while ((nread = read(0, buf, buff_size)) > 0) {
+
+    if (!strcmp("END", buf))
+    {
+        break;
+    }
+
     if (write(fd, buf, nread) < 0) {
       perror("write");
       exit(1);

@@ -17,8 +17,8 @@
 #define SLEN sizeof(struct sockaddr_in)
 
 int main(int argc, char *argv[]) {
-//--------------------------start
-int buff_size = -1;
+  //----------------start
+  int buff_size = -1;
   int server_port = -1;
   
   while (true) {
@@ -73,8 +73,7 @@ int buff_size = -1;
             argv[0]);
     return 1;
   }
-
-//-------------------------end
+//----------------end
   int sockfd, n;
   char mesg[buff_size], ipadr[16];
   struct sockaddr_in servaddr;

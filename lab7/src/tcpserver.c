@@ -9,14 +9,15 @@
 
 #include <stdbool.h>
 #include <getopt.h>
+
 //#define SERV_PORT 10050
 //#define BUFSIZE 100
 #define SADDR struct sockaddr
 
 int main(int argc, char *argv[]) {
-//-------------------------------start
-int buff_size = -1;
-int server_port = -1;
+  //------------start
+  int buff_size = -1;
+  int server_port = -1;
   
   while (true) {
     int current_optind = optind ? optind : 1;
@@ -70,7 +71,7 @@ int server_port = -1;
             argv[0]);
     return 1;
   }
-//-------------------------------end    
+  //----------------end
   const size_t kSize = sizeof(struct sockaddr_in);
 
   int lfd, cfd;
@@ -106,7 +107,7 @@ int server_port = -1;
       perror("accept");
       exit(1);
     }
-    printf("connection established\n");
+    printf("connection established\n"); //соединение установлено
 
     while ((nread = read(cfd, buf, buff_size)) > 0) {
       write(1, &buf, nread);
